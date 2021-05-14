@@ -19,7 +19,7 @@ ATTENDANCE=$1"attendance.csv"
 PUBLICATIONS=$1"publications.csv"
 
 IN_TEMP=$(($MIN_DATE + $(($RANDOM % $DATE_DIFF))))
-for i in {1..1000}
+for i in {1..10000}
 	do
 	    UNIV_ID=$((RANDOM % 10))
 	    USER_ID=$((RANDOM % 50))
@@ -35,13 +35,13 @@ for i in {1..1000}
 	    STR=$UNIV_ID","$USER_ID","$OUT_DATE","$TYPE
       echo "$STR">>"$ATTENDANCE"
 	done
-
-for i in {1..3000}
+DATE_TEMP=$(($MIN_DATE + $(($RANDOM % $DATE_DIFF))))
+for i in {1..10000}
 	do
 	    UNIV_ID=$((RANDOM % 10))
 	    USER_ID=$((RANDOM % 50))
 	    PUBLIC_ID=$((RANDOM % 1000))
-	    DATE_TEMP=$((MIN_DATE + $(($RANDOM % $DATE_DIFF))))
+	    DATE_TEMP=$((DATE_TEMP + $(($RANDOM % $DATE_DIFF))))
 	    IN_DATE=$(date -d @"$DATE_TEMP" +"%Y-%m-%d %H:%M:%S")
 	    STR=$UNIV_ID","$USER_ID","$PUBLIC_ID","$IN_DATE
       echo "$STR">>"$PUBLICATIONS"
