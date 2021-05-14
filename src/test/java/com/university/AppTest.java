@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,7 +43,9 @@ public class AppTest {
 
 
     }
-
+    /**
+     * Тест со множеством входных значений
+     * */
     @Test
     public void testComputation(){
         JavaSparkContext sc = new JavaSparkContext(ss.sparkContext());
@@ -62,5 +63,42 @@ public class AppTest {
         assert result1 != null;
         assertEquals(2, result1.getPublications());
         assertEquals(2, result1.getHourInUniv());
+    }
+    /**
+     * Тест с одной записью о посещаемости
+     * */
+    @Test
+    public void testComputationOneRecord(){
+        JavaSparkContext sc = new JavaSparkContext(ss.sparkContext());
+        List<UserAttendance> at = new ArrayList<>();
+        List<UserPublication> pc = new ArrayList<>();
+        at.add(new UserAttendance(7, 2, new Date(2019, 0, 1, 14, 13, 5), true));
+        App app = new App(ss.sparkContext());
+        JavaRDD<UserAttendance> userAttendanceJavaRDD = sc.parallelize(at);
+        JavaRDD<UserPublication> userPublicationJavaRDD = sc.parallelize(pc);
+
+        JavaRDD<Result> resultJavaRDD = app.getResultJavaRDD(userAttendanceJavaRDD, userPublicationJavaRDD);
+        List<Result> resultList = resultJavaRDD.collect();
+        assertEquals(0, resultList.size());
+    }
+    /**
+     * Тест с одной записью о посещаемости и одной публикацией
+     * */
+    @Test
+    public void testComputationTwoRecords(){
+        JavaSparkContext sc = new JavaSparkContext(ss.sparkContext());
+        List<UserAttendance> at = new ArrayList<>();
+        List<UserPublication> pc = new ArrayList<>();
+        at.add(new UserAttendance(7, 2, new Date(2019, 0, 1, 14, 13, 5), true));
+        pc.add(new UserPublication(7, 2, 767, new Date(2019, 0, 1,3, 18, 6)));
+        App app = new App(ss.sparkContext());
+        JavaRDD<UserAttendance> userAttendanceJavaRDD = sc.parallelize(at);
+        JavaRDD<UserPublication> userPublicationJavaRDD = sc.parallelize(pc);
+
+        JavaRDD<Result> resultJavaRDD = app.getResultJavaRDD(userAttendanceJavaRDD, userPublicationJavaRDD);
+        List<Result> resultList = resultJavaRDD.collect();
+        assertEquals(1, resultList.size());
+        assertEquals(1, resultList.get(0).getPublications());
+        assertEquals(0, resultList.get(0).getHourInUniv());
     }
 }

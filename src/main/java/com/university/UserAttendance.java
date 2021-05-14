@@ -57,12 +57,22 @@ public class UserAttendance implements Serializable {
     public long getHours(){
         Collections.sort(inHours);
         Collections.sort(outHours);
+        int i = 0;
+        int j = 0;
+
         long hours = 0;
-        for (int i = 0; i < Math.min(inHours.size(), outHours.size()); i++) {
-            long out = outHours.get(i).getEpochSecond()/(3600);
+        while ((i < inHours.size() || j < outHours.size()) && (inHours.size() > 0 && outHours.size() > 0)){
+            long out = outHours.get(j).getEpochSecond()/(3600);
             long in = inHours.get(i).getEpochSecond()/(3600);
-            hours+=out-in;
+            if (out < in){
+                j++;
+            } else {
+              hours+=out-in;
+              i++;
+              j++;
+            }
         }
+
         return hours;
     }
 }
