@@ -61,6 +61,7 @@ public class UserAttendance implements Serializable {
         int j = 0;
 
         long hours = 0;
+
         while ((i < inHours.size() && j < outHours.size())){
             long out = outHours.get(j).getEpochSecond()/(3600);
             long in = inHours.get(i).getEpochSecond()/(3600);
@@ -72,7 +73,6 @@ public class UserAttendance implements Serializable {
               j++;
             }
         }
-
         return hours;
     }
 }
